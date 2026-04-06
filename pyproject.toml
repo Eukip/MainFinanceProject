@@ -25,6 +25,8 @@ dev = [
 ]
 
 # uv run ruff check --fix
+# uv run ruff format --check
+# uv run ruff format src tests
 [tool.ruff]
 # Где лежит исходный код
 src = ["src", "tests"]
