@@ -1,5 +1,6 @@
 # src/main.py
 """Точка входа приложения — FastAPI"""
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -16,9 +17,9 @@ async def lifespan(app: FastAPI):
     """Запуск и остановка приложения"""
     setup_logging()
     print("🚀 Приложение запускается...")
-    await init_db()          # инициализация БД (пока можно закомментировать)
+    await init_db()  # инициализация БД (пока можно закомментировать)
     yield
-    await close_db()         # корректное закрытие соединений
+    await close_db()  # корректное закрытие соединений
     print("🛑 Приложение остановлено.")
 
 
@@ -34,7 +35,7 @@ app = FastAPI(
 # CORS (для будущего фронтенда, Telegram-бота, десктопа)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],           # в продакшене замени на конкретные домены
+    allow_origins=["*"],  # в продакшене замени на конкретные домены
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

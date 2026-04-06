@@ -8,6 +8,7 @@ from src.core.database import UUIDBase
 
 class User(UUIDBase):
     """Пользователь приложения"""
+
     __tablename__ = "users"
 
     # Основная связка: email + пароль

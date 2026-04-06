@@ -1,4 +1,5 @@
 """Настройка базы данных (Postgres + SQLAlchemy 2.0 async)"""
+
 from collections.abc import AsyncGenerator
 from datetime import datetime
 from uuid import UUID, uuid4
@@ -15,8 +16,8 @@ from .config import settings
 
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=settings.SQLALCHEMY_ECHO,      # выводит SQL в консоль при True
-    pool_pre_ping=True,                 # проверяет соединение перед использованием
+    echo=settings.SQLALCHEMY_ECHO,  # выводит SQL в консоль при True
+    pool_pre_ping=True,  # проверяет соединение перед использованием
 )
 
 
@@ -36,11 +37,13 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 class Base(DeclarativeBase):
     """Единый базовый класс для всех моделей проекта"""
+
     __abstract__ = True
 
 
 class UUIDBase(Base):
     """Базовый класс для сущностей с UUID primary key"""
+
     __abstract__ = True
 
     id: Mapped[UUID] = mapped_column(
@@ -59,6 +62,7 @@ class UUIDBase(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
 
 async def init_db() -> None:
     """Здесь можно делать create_all или другие инициализации"""
