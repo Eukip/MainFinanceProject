@@ -1,4 +1,5 @@
 """FastAPI Dependencies + JWT авторизация"""
+
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -46,9 +47,7 @@ async def get_current_user(
     )
 
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=["HS256"]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         token_data = TokenPayload(**payload)
         if token_data.type != "access":
             raise credentials_exception

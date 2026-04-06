@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_ignore_empty=True,
-        extra="ignore",          # игнорируем лишние переменные
+        extra="ignore",  # игнорируем лишние переменные
     )
 
     # === Основные настройки ===
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # === Безопасность (понадобится для JWT) ===
     SECRET_KEY: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7   # 7 дней
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 дней
 
     # === AI (пока оставляем, позже используем) ===
     OPENAI_API_KEY: str | None = None

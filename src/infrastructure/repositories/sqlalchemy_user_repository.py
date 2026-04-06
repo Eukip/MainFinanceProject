@@ -1,4 +1,5 @@
 """Adapter — конкретная реализация UserRepository на SQLAlchemy"""
+
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -16,15 +17,11 @@ class SQLAlchemyUserRepository(UserRepository):
         self.db = db
 
     async def get_by_email(self, email: str) -> User | None:
-        result = await self.db.execute(
-            select(User).where(User.email == email)
-        )
+        result = await self.db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
     async def get_by_id(self, user_id: UUID) -> User | None:
-        result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        result = await self.db.execute(select(User).where(User.id == user_id))
         return result.scalar_one_or_none()
 
     async def create(self, user_in: UserCreate, hashed_password: str) -> User:
@@ -33,7 +30,7 @@ class SQLAlchemyUserRepository(UserRepository):
             hashed_password=hashed_password,
         )
         self.db.add(user)
-        await self.db.flush()          # Получаем ID сразу
+        await self.db.flush()  # Получаем ID сразу
         return user
 
     async def update_last_login(self, user_id: UUID) -> None:

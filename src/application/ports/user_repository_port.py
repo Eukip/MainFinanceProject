@@ -1,4 +1,5 @@
 """Port (абстрактный интерфейс) для репозитория пользователей"""
+
 from abc import abstractmethod
 from typing import Protocol
 from uuid import UUID

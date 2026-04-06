@@ -42,9 +42,7 @@ class UserService:
 
     # ====================== JWT ТОКЕНЫ ======================
     def create_access_token(self, subject: str) -> str:
-        expire = datetime.now(UTC) + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode = TokenPayload(
             sub=subject,
             exp=int(expire.timestamp()),
