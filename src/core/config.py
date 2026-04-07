@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # === Безопасность (понадобится для JWT) ===
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 дней
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 30    # 30 дней
 
     # === AI (пока оставляем, позже используем) ===
     OPENAI_API_KEY: str | None = None

@@ -1,6 +1,4 @@
-"""Бизнес-логика домена Users (Clean Architecture)"""
-
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
 from argon2 import PasswordHasher
@@ -40,9 +38,11 @@ class UserService:
         """Хеширование пароля с помощью Argon2"""
         return pwd_hasher.hash(password)
 
-    # ====================== JWT ТОКЕНЫ ======================
+    # ====================== JWT ======================
     def create_access_token(self, subject: str) -> str:
-        expire = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        )
         to_encode = TokenPayload(
             sub=subject,
             exp=int(expire.timestamp()),
@@ -51,7 +51,9 @@ class UserService:
         return jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
 
     def create_refresh_token(self, subject: str) -> str:
-        expire = datetime.now(UTC) + timedelta(days=30)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
+        )
         to_encode = TokenPayload(
             sub=subject,
             exp=int(expire.timestamp()),
@@ -63,14 +65,11 @@ class UserService:
     async def register(self, user_in: UserCreate) -> Token:
         """Регистрация нового пользователя"""
         # Проверяем, существует ли уже пользователь
-        existing_user = await self.repository.get_by_email(user_in.email)
-        if existing_user:
+        if await self.repository.get_by_email(user_in.email):
             raise ValueError("Пользователь с таким email уже существует")
 
         # Хешируем пароль
         hashed_password = self.get_password_hash(user_in.password)
-
-        # Создаём пользователя через репозиторий (Port)
         user = await self.repository.create(user_in, hashed_password)
 
         # Генерируем токены
@@ -86,10 +85,7 @@ class UserService:
     async def authenticate(self, user_in: UserLogin) -> Token:
         """Аутентификация (логин)"""
         user = await self.repository.get_by_email(user_in.email)
-        if not user:
-            raise ValueError("Неверный email или пароль")
-
-        if not self.verify_password(user_in.password, user.hashed_password):
+        if not user or not self.verify_password(user_in.password, user.hashed_password):
             raise ValueError("Неверный email или пароль")
 
         if not user.is_active:
